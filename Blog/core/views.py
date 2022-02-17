@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 from core.models import Blog
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 
 
@@ -51,3 +52,11 @@ def private_place(request):
 @user_passes_test(lambda user: user.is_staff)
 def staff_place(request):
     return HttpResponse("Employees must wash hands", content_type='text/plain')
+
+
+@login_required
+def add_message(request):
+    username = request.user.username
+    messages.add_message(request, messages.INFO, f"Hello {username}")
+    messages.add_message(request, messages.WARNING, "DANGER WILL ROBINSON")
+    return HttpResponse("Messages added", content_type="text/plain")
